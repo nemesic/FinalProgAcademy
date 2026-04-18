@@ -1,11 +1,19 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 
 const Header = () => {
+  const [scrolled, setScrolled] = useState(false);
+
+  useEffect(() => {
+    const onScroll = () => setScrolled(window.scrollY > 40);
+    window.addEventListener("scroll", onScroll);
+    return () => window.removeEventListener("scroll", onScroll);
+  }, []);
+
   return (
-    <header className="w-full h-[65px] flex items-center justify-center bg-white shadow">
+    <header className={`header-fixed w-full h-[65px] flex items-center justify-center${scrolled ? " header-blur" : ""}`}>
       <div className="w-[1340px] h-[44px] flex items-center justify-between">
         {/* Left Navigation */}
-    <nav className="flex items-center w-[455px] h-full gap-8 mr-8">
+        <nav className="flex items-center w-[455px] h-full gap-8 mr-8">
           <a href="#" className="font-montserrat font-medium text-xs leading-none px-4 tracking-widest text-black/30 hover:text-black focus:text-black active:text-black cursor-pointer transition-colors">SUPPLEMENT</a>
           <a href="#" className="font-montserrat font-medium text-xs leading-none px-4 tracking-widest text-black/30 hover:text-black focus:text-black active:text-black cursor-pointer transition-colors">LASER</a>
           <a href="#" className="font-montserrat font-medium text-xs leading-none px-4 tracking-widest text-black/30 hover:text-black focus:text-black active:text-black cursor-pointer transition-colors">REVIEWS</a>
