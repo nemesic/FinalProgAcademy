@@ -1,8 +1,9 @@
 import React, { useState, useRef, useEffect } from "react";
-import { reviews } from "./reviewsData";
+import { reviews as initialReviews } from "./reviewsData";
 
 export default function LastSection() {
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const [allReviews, setAllReviews] = useState(initialReviews);
   const getReviewsPerPage = () => {
     if (window.innerWidth < 600) return 1;
     if (window.innerWidth < 900) return 2;
@@ -10,10 +11,67 @@ export default function LastSection() {
   };
   const [REVIEWS_PER_PAGE, setREVIEWS_PER_PAGE] = useState(getReviewsPerPage());
   const [page, setPageRaw] = useState(0);
-  const pageCount = Math.ceil(reviews.length / REVIEWS_PER_PAGE);
-  const pagedReviews = reviews.slice(page * REVIEWS_PER_PAGE, (page + 1) * REVIEWS_PER_PAGE);
+  const pageCountRaw = Math.ceil(allReviews.length / REVIEWS_PER_PAGE);
+  const pageCount = Math.min(pageCountRaw, 15);
+  const pagedReviews = allReviews.slice(page * REVIEWS_PER_PAGE, (page + 1) * REVIEWS_PER_PAGE);
   const [reviewFade, setReviewFade] = useState(true);
   const [pendingPage, setPendingPage] = useState(null);
+
+  const logos = [
+    "/img/forbes.png",
+    "/img/telegraph.png",
+    "/img/financial.png",
+    "/img/vogue.png",
+    "/img/dailymail.png"
+  ];
+  const sources = [
+    "Forbes",
+    "The Daily Telegraph",
+    "Financial Times",
+    "Vogue",
+    "Daily Mail"
+  ];
+
+  const [apiError, setApiError] = useState(null);
+
+  const reviewsSectionRef = useRef(null);
+  const [reviewsVisible, setReviewsVisible] = useState(false);
+
+  useEffect(() => {
+    if (!reviewsVisible) return;
+    let isMounted = true;
+    const fetchFakeReview = async () => {
+      setApiError(null);
+      try {
+        const postId = Math.floor(Math.random() * 100) + 1;
+        const res = await fetch(`https://jsonplaceholder.typicode.com/posts/${postId}`);
+        if (!res.ok) throw new Error("API error");
+        const data = await res.json();
+        const idx = Math.floor(Math.random() * logos.length);
+        const newReview = {
+          quote: data.title,
+          logo: logos[idx],
+          source: sources[idx],
+        };
+        if (isMounted) setAllReviews(prev => [...prev, newReview]);
+      } catch {
+        if (isMounted) setApiError("Не вдалося отримати фейковий відгук з API");
+      }
+    };
+    fetchFakeReview();
+    return () => { isMounted = false; };
+  }, [logos, sources, reviewsVisible]);
+
+  useEffect(() => {
+    const section = reviewsSectionRef.current;
+    if (!section) return;
+    const observer = new window.IntersectionObserver(
+      ([entry]) => setReviewsVisible(entry.isIntersecting),
+      { threshold: 0.2 }
+    );
+    observer.observe(section);
+    return () => observer.disconnect();
+  }, []);
 
   const setPage = (newPage) => {
     setReviewFade(false);
@@ -85,7 +143,8 @@ export default function LastSection() {
 
       <div style={{ height: "100px", width: "100%" }} />
 
-      <section className="reviews-section">
+      <section className="reviews-section" ref={reviewsSectionRef}>
+        {apiError && <div style={{ color: 'red', marginBottom: 8 }}>{apiError}</div>}
         <div className={`reviews-container${reviewFade ? " fade-in" : " fade-out"}`}>
           {pagedReviews.map((item, idx) => (
             <div className="review" key={idx}>
@@ -106,9 +165,12 @@ export default function LastSection() {
             key={i}
             className={`review-dot${i === page ? " active" : ""}`}
             onClick={() => handlePageClick(i)}
-            style={{ cursor: "pointer" }}
+            style={{ cursor: "pointer" }} 
           />
         ))}
+        {pageCountRaw > 15 && (
+          <span style={{ marginLeft: 8, color: '#888' }}></span>
+        )}
       </div>
       {isModalOpen && (
         <FounderModal onClose={() => setIsModalOpen(false)} />
