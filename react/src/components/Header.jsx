@@ -16,13 +16,15 @@ const Header = () => {
         <nav className="flex items-center w-[455px] h-full gap-8 mr-8">
           <a href="#" className="font-montserrat font-medium text-xs leading-none px-4 tracking-widest text-black/30 hover:text-black focus:text-black active:text-black cursor-pointer transition-colors">SUPPLEMENT</a>
           <a href="#" className="font-montserrat font-medium text-xs leading-none px-4 tracking-widest text-black/30 hover:text-black focus:text-black active:text-black cursor-pointer transition-colors">LASER</a>
-          <a href="#" className="font-montserrat font-medium text-xs leading-none px-4 tracking-widest text-black/30 hover:text-black focus:text-black active:text-black cursor-pointer transition-colors">REVIEWS</a>
+          <a href="#last-section" className="font-montserrat font-medium text-xs leading-none px-4 tracking-widest text-black/30 hover:text-black focus:text-black active:text-black cursor-pointer transition-colors">REVIEWS</a>
           <a href="#" className="font-montserrat font-medium text-xs leading-none px-4 tracking-widest text-black/30 hover:text-black focus:text-black active:text-black cursor-pointer transition-colors">JOURNAL</a>
           <a href="#" className="font-montserrat font-medium text-xs leading-none px-4 tracking-widest text-black/30 hover:text-black focus:text-black active:text-black cursor-pointer transition-colors">ABOUT</a>
         </nav>
         {/* Logo Centered */}
         <div className="flex-shrink-0 flex justify-center items-center mx-auto" style={{width: '98px'}}>
-          <img src="/img/lyma.png" alt="LYMA Logo" className="w-[98px] h-[13px] object-contain" />
+          <a href="#hero-section">
+            <img src="/img/lyma.png" alt="LYMA Logo" className="w-[98px] h-[13px] object-contain" />
+          </a>
         </div>
         {/* Right Navigation */}
         <div className="flex items-center w-[455px] h-full gap-8 justify-end">

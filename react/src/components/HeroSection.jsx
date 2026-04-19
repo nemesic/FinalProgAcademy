@@ -29,7 +29,7 @@ const HeroSection = () => {
   }, [bgIndex]);
 
   return (
-    <section
+    <section id="hero-section"
       className="w-full min-w-[1440px] h-[800px] flex flex-col items-center justify-center bg-cover bg-center relative"
       style={{}}
     >

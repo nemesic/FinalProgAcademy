@@ -54,7 +54,7 @@ export default function FourSection() {
           WELLNESS INNOVATION AT ITS SCIENTIFIC BEST.
         </h1>
         <div style={{ paddingBottom: 30 }} />
-        <div className="flex flex-wrap gap-6 mt-10 justify-center">
+        <div className="flex flex-wrap mt-10 justify-center" style={{ gap: '35px' }}>
           <button className="hero-btn">SUPPLEMENT</button>
           <button className="hero-btn">LASER</button>
         </div>
