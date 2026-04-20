@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { Link, useNavigate, useLocation } from "react-router-dom";
 import smoothScrollToSection from "./SmoothScrollToSection";
+import { getCartItemsCount, readCart, subscribeToCartUpdates } from "./cartStorage";
 
 const Header = () => {
   const [scrolled, setScrolled] = useState(false);
@@ -8,11 +9,20 @@ const Header = () => {
   const [promo, setPromo] = useState("");
   const [promoOk, setPromoOk] = useState(false);
   const [promoTouched, setPromoTouched] = useState(false);
+  const [cartCount, setCartCount] = useState(() => getCartItemsCount(readCart()));
 
   useEffect(() => {
     const onScroll = () => setScrolled(window.scrollY > 40);
     window.addEventListener("scroll", onScroll);
     return () => window.removeEventListener("scroll", onScroll);
+  }, []);
+
+  useEffect(() => {
+    function syncCartCount() {
+      setCartCount(getCartItemsCount(readCart()));
+    }
+
+    return subscribeToCartUpdates(syncCartCount);
   }, []);
 
   const navigate = useNavigate();
@@ -29,18 +39,18 @@ const Header = () => {
   };
 
   return (
-    <header className={`header-fixed w-full h-[65px] flex items-center justify-center${scrolled ? " header-blur" : ""}`}>
-      <div className="w-[1340px] h-[44px] flex items-center justify-between">
+    <header className={`header-fixed${scrolled ? " header-blur" : ""}`}>
+      <div className="header-shell">
         {/* Left Navigation */}
-        <nav className="flex items-center w-[455px] h-full gap-8 mr-8">
-          <Link to="/supplement" className="font-montserrat font-medium text-xs leading-none px-4 tracking-widest text-black/30 hover:text-black focus:text-black active:text-black cursor-pointer transition-colors">SUPPLEMENT</Link>
-          <Link to="/laser" className="font-montserrat font-medium text-xs leading-none px-4 tracking-widest text-black/30 hover:text-black focus:text-black active:text-black cursor-pointer transition-colors">LASER</Link>
-          <a href="/#last-section" onClick={handleReviewsClick} className="font-montserrat font-medium text-xs leading-none px-4 tracking-widest text-black/30 hover:text-black focus:text-black active:text-black cursor-pointer transition-colors">REVIEWS</a>
-          <Link to="/journal" className="font-montserrat font-medium text-xs leading-none px-4 tracking-widest text-black/30 hover:text-black focus:text-black active:text-black cursor-pointer transition-colors">JOURNAL</Link>
-          <Link to="/about" className="font-montserrat font-medium text-xs leading-none px-4 tracking-widest text-black/30 hover:text-black focus:text-black active:text-black cursor-pointer transition-colors">ABOUT</Link>
+        <nav className="header-nav header-nav-left">
+          <Link to="/supplement" className="header-link">SUPPLEMENT</Link>
+          <Link to="/laser" className="header-link">LASER</Link>
+          <a href="/#last-section" onClick={handleReviewsClick} className="header-link">REVIEWS</a>
+          <Link to="/journal" className="header-link">JOURNAL</Link>
+          <Link to="/about" className="header-link">ABOUT</Link>
         </nav>
         {/* Logo Centered */}
-        <div className="flex-shrink-0 flex justify-center items-center mx-auto header-logo-block">
+        <div className="header-logo-block">
           <a
             href="/#hero-section"
             onClick={e => {
@@ -57,15 +67,15 @@ const Header = () => {
               }
             }}
           >
-            <img src="/img/lyma.png" alt="LYMA Logo" className="w-[98px] h-[13px] object-contain" />
+            <img src="/img/lyma.png" alt="LYMA Logo" className="header-logo-image" />
           </a>
         </div>
         {/* Right Navigation */}
-        <div className="flex items-center w-[455px] h-full gap-8 justify-end">
-          <Link to="/help" className="font-montserrat font-medium text-xs leading-none px-4 tracking-widest text-black/30 hover:text-black focus:text-black active:text-black cursor-pointer transition-colors">HELP & SUPPORT</Link>
+        <div className="header-nav header-nav-right">
+          <Link to="/help" className="header-link">HELP & SUPPORT</Link>
           <Link
             to="#"
-            className="font-montserrat font-medium text-xs leading-none px-4 tracking-widest text-black/30 hover:text-black focus:text-black active:text-black cursor-pointer transition-colors"
+            className="header-link"
             onClick={e => { e.preventDefault(); setShowActivate(true); setPromo(""); setPromoOk(false); setPromoTouched(false); }}
           >
             ACTIVATE
@@ -74,7 +84,11 @@ const Header = () => {
                   <div className="activate-modal-overlay" onClick={() => setShowActivate(false)}>
                     <div className="activate-modal" onClick={e => e.stopPropagation()}>
                       <button className="activate-modal-close" onClick={() => setShowActivate(false)} aria-label="Close">×</button>
-                      <div className="activate-modal-title">ACTIVATE PROMO CODE</div>
+                      <div className="page-eyebrow activate-modal-badge">Activate</div>
+                      <div className="activate-modal-title">PROMO CODE</div>
+                      <p className="activate-modal-text">
+                        Enter your personal code below to activate a special offer before checkout.
+                      </p>
                       <form
                         onSubmit={e => {
                           e.preventDefault();
@@ -90,13 +104,14 @@ const Header = () => {
                       >
                         <input
                           type="text"
-                          placeholder="Enter promo code"
+                          placeholder="Enter your promo code"
                           value={promo}
                           onChange={e => { setPromo(e.target.value); setPromoTouched(false); setPromoOk(false); }}
                           className={
                             "activate-modal-input" + (promoTouched && !promoOk ? " activate-modal-input-error" : "")
                           }
                         />
+                        <div className="activate-modal-hint">Demo code: NEMESIC</div>
                         <button
                           type="submit"
                           className={promoOk ? "activate-modal-btn activate-modal-btn-success" : "activate-modal-btn"}
@@ -109,14 +124,17 @@ const Header = () => {
                           ) : "Activate"}
                         </button>
                         {promoTouched && !promoOk && (
-                          <div className="activate-modal-error">Invalid promo code</div>
+                          <div className="activate-modal-error">Invalid promo code. Try NEMESIC.</div>
                         )}
                       </form>
                     </div>
                   </div>
                 )}
-          <Link to="/account" className="font-montserrat font-medium text-xs leading-none px-4 tracking-widest text-black/30 hover:text-black focus:text-black active:text-black cursor-pointer transition-colors mr-8 relative after:content-[''] after:absolute after:right-[-16px] after:top-1/2 after:-translate-y-1/2 after:w-px after:h-4 after:bg-gray-300 after:ml-4">ACCOUNT</Link>
-          <Link to="/cart" className="ml-4 h-[23px] w-[64px] px-6 flex items-center justify-center bg-black text-white text-xs font-medium uppercase tracking-widest rounded-none hover:bg-[#444] transition-colors">BUY</Link>
+          <Link to="/account" className="header-link header-link-account">ACCOUNT</Link>
+          <Link to="/cart" className="header-buy-link" aria-label={`Open cart with ${cartCount} item${cartCount === 1 ? "" : "s"}`}>
+            <span>BUY</span>
+            {cartCount > 0 && <span className="header-cart-count">{cartCount}</span>}
+          </Link>
         </div>
       </div>
     </header>

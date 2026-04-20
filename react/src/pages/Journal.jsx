@@ -32,9 +32,14 @@ export default function Journal() {
 
   return (
     <div className="journal-page">
+      <div className="journal-hero">
+        <h1 className="journal-page-desc fade-in animate-journal-fade-in">
+          This section loads articles from API and presents them in the same visual style as the rest of the project.
+        </h1>
+      </div>
       <div className="journal-refresh-row">
         <button
-          className="journal-refresh-btn"
+          className="journal-refresh-btn fade-in animate-journal-fade-in"
           onClick={() => {
             setLoading(true);
             const seed = Math.random().toString(36).slice(2);

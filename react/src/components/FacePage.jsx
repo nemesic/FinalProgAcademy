@@ -1,13 +1,6 @@
 import React, { useRef, useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
-
-function readCart() {
-  try {
-    return JSON.parse(localStorage.getItem("cart") || "[]");
-  } catch {
-    return [];
-  }
-}
+import { readCart, writeCart } from "./cartStorage";
 
 export default function FacePage() {
   const ref = useRef(null);
@@ -28,7 +21,7 @@ export default function FacePage() {
       cart.push({ ...product, quantity: 1 });
     }
 
-    localStorage.setItem("cart", JSON.stringify(cart));
+    writeCart(cart);
     navigate("/cart");
   }
 

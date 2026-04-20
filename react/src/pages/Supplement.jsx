@@ -1,4 +1,5 @@
 import React, { useState, useRef, useEffect } from "react";
+import { getCartItemsCount, readCart, writeCart } from "../components/cartStorage";
 
 const images = [
 	"/img/1.avif",
@@ -113,7 +114,7 @@ export default function Supplement() {
 	}, [toast]);
 
 	function handleAddToCart() {
-		const cart = JSON.parse(localStorage.getItem("cart") || "[]");
+		const cart = readCart();
 		const product = {
 			id: "supplement-lyma",
 			name: "LYMA Supplement Refills (30 Days)",
@@ -128,8 +129,8 @@ export default function Supplement() {
 		} else {
 			cart.push(product);
 		}
-		localStorage.setItem("cart", JSON.stringify(cart));
-		setToast("Added to basket!");
+		writeCart(cart);
+		setToast(`Added to basket. Total items: ${getCartItemsCount(cart)}`);
 	}
 
 	return (

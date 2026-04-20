@@ -1,5 +1,6 @@
 import { useEffect, useRef, useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
+import { getCartItemsCount, readCart, writeCart } from "../components/cartStorage";
 
 function normalizeCartItem(item) {
   return {
@@ -46,24 +47,20 @@ function formatPrice(value) {
 
 export default function Cart() {
   const navigate = useNavigate();
+  const location = useLocation();
   const toastTimeout = useRef(null);
-  const [cart, setCart] = useState(() => {
-    try {
-      return JSON.parse(localStorage.getItem("cart") || "[]");
-    } catch {
-      return [];
-    }
-  });
+  const [cart, setCart] = useState(() => readCart());
   const [toast, setToast] = useState("");
 
   const grouped = groupCart(cart);
+  const totalItems = getCartItemsCount(cart);
   const total = grouped.reduce(
     (sum, item) => sum + (Number(item.price) || 0) * (Number(item.quantity) || 0),
     0
   );
 
   useEffect(() => {
-    localStorage.setItem("cart", JSON.stringify(cart));
+    writeCart(cart);
   }, [cart]);
 
   useEffect(() => {
@@ -87,17 +84,22 @@ export default function Cart() {
   }, [toast]);
 
   useEffect(() => {
-    function handleStorage() {
-      try {
-        setCart(JSON.parse(localStorage.getItem("cart") || "[]"));
-      } catch {
-        setCart([]);
-      }
+    function syncCart() {
+      setCart(readCart());
     }
 
-    window.addEventListener("storage", handleStorage);
-    return () => window.removeEventListener("storage", handleStorage);
+    window.addEventListener("storage", syncCart);
+    return () => window.removeEventListener("storage", syncCart);
   }, []);
+
+  useEffect(() => {
+    if (!location.state?.afterLoginCheckout) {
+      return;
+    }
+
+    showToast("Login successful. Your cart is saved.");
+    navigate("/cart", { replace: true, state: null });
+  }, [location.state, navigate]);
 
   function showToast(message) {
     setToast(message);
@@ -154,7 +156,12 @@ export default function Cart() {
 
     if (localStorage.getItem("account_logged_in") !== "true") {
       showToast("Sign in to continue");
-      navigate("/account");
+      navigate("/account", {
+        state: {
+          fromCheckout: true,
+          redirectTo: "/cart",
+        },
+      });
       return;
     }
 
@@ -166,8 +173,11 @@ export default function Cart() {
     <div className="cart-page">
       <div className="cart-container">
         <div className="cart-header">
+          <div className="page-eyebrow">Cart</div>
           <h1 className="cart-title">YOUR CART</h1>
-          <div className="cart-subtitle">Your selected items</div>
+          <div className="cart-subtitle">
+            {grouped.length > 0 ? `${totalItems} item${totalItems === 1 ? "" : "s"} in your basket` : "Your selected items"}
+          </div>
           {grouped.length > 0 && (
             <div className="cart-btn-row">
               <button className="cart-btn cart-btn-main" onClick={clearCart} aria-label="Clear cart">

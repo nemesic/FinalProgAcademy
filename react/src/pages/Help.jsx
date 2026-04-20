@@ -30,9 +30,9 @@ export default function Help() {
   }
 
   return (
-    <div className="help-page min-h-screen flex items-center justify-center bg-[#f7f8fa]">
+    <div className="help-page">
       <div className="help-card animate-help-fade-in">
-        <div className="help-badge">Support</div>
+        <div className="page-eyebrow help-badge">Support</div>
         <h1 className="help-title">CONTACT OUR TEAM</h1>
         <div className="help-subtitle">
           We’ll answer your questions and help with any issue.

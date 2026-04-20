@@ -1,4 +1,5 @@
 import React, { useState, useEffect, useRef } from "react";
+import { getCartItemsCount, readCart, writeCart } from "../components/cartStorage";
 
 const images = [
   "/img/8.avif",
@@ -123,7 +124,7 @@ export default function Laser() {
 
 
   function handleAddToCart() {
-    const cart = JSON.parse(localStorage.getItem("cart") || "[]");
+    const cart = readCart();
     const product = {
       id: "laser-lyma",
       name: "LYMA Laser (Medical Grade)",
@@ -133,17 +134,15 @@ export default function Laser() {
     };
 
     let totalQuantity = quantity;
-    let lastImg = images[activeIdx];
     for (let i = cart.length - 1; i >= 0; --i) {
       if (cart[i].id === product.id) {
         totalQuantity += Number(cart[i].quantity) || 1;
-        lastImg = cart[i].img || lastImg;
         cart.splice(i, 1);
       }
     }
     cart.push({ ...product, quantity: totalQuantity, img: images[activeIdx] });
-    localStorage.setItem("cart", JSON.stringify(cart));
-    setToast("Added to basket!");
+    writeCart(cart);
+    setToast(`Added to basket. Total items: ${getCartItemsCount(cart)}`);
   }
 
   return (
