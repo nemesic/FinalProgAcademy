@@ -10,13 +10,14 @@ export default function About() {
         </div>
         <h1 className="about-title font-bold">ABOUT US</h1>
         <div className="about-desc">
-          This is the final project for the <b>Prog.Academy</b> course. The goal was to create a modern, responsive web application using the latest technologies and best practices.
+          This project is the final assignment for the <b>Prog.Academy</b> course.  It focuses on building a modern, responsive web application using current technologies and best practices.
         </div>
         <div className="about-stack">
-          <b>Stack:</b> React, JavaScript (ES6+), Tailwind CSS, Vite, HTML5, CSS3.
+          <b>Tech Stack:</b> React, JavaScript (ES6+), Tailwind CSS, Vite, HTML5, CSS3.
         </div>
         <div className="about-info">
-          The project demonstrates component-based architecture, clean code, and a focus on user experience. More details about the team, features, and technologies will be added soon. Thank you for visiting!
+          The application is built with a component-based architecture, clean and maintainable code, and a strong focus on user experience and performance.
+          
         </div>
         {/* GitHub block */}
         <a

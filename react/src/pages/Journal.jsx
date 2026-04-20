@@ -1,5 +1,3 @@
-
-
 import { useState, useEffect } from "react";
 
 export default function Journal() {
@@ -28,9 +26,12 @@ export default function Journal() {
       .finally(() => setLoading(false));
   }, []);
 
+  function getJournalDelayClass(index) {
+    return `journal-delay-${Math.min(index, 14)}`;
+  }
+
   return (
     <div className="journal-page">
-      {/* Кнопка обновления и статус */}
       <div className="journal-refresh-row">
         <button
           className="journal-refresh-btn"
@@ -66,8 +67,7 @@ export default function Journal() {
           {posts.map((post, idx) => (
             <div
               key={post.id}
-              className="journal-card animate-journal-fade-in"
-              style={{ animationDelay: `${(idx * 0.08 + 0.1).toFixed(2)}s` }}
+              className={`journal-card animate-journal-fade-in ${getJournalDelayClass(idx)}`}
             >
               <div className="journal-card-img">
                 <img
@@ -91,7 +91,6 @@ export default function Journal() {
         </div>
       )}
 
-      {/* Модалка для повного тексту */}
       {modal && (
         <div
           className="journal-modal-overlay"

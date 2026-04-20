@@ -40,7 +40,7 @@ const Header = () => {
           <Link to="/about" className="font-montserrat font-medium text-xs leading-none px-4 tracking-widest text-black/30 hover:text-black focus:text-black active:text-black cursor-pointer transition-colors">ABOUT</Link>
         </nav>
         {/* Logo Centered */}
-        <div className="flex-shrink-0 flex justify-center items-center mx-auto" style={{width: '98px'}}>
+        <div className="flex-shrink-0 flex justify-center items-center mx-auto header-logo-block">
           <a
             href="/#hero-section"
             onClick={e => {
@@ -71,54 +71,10 @@ const Header = () => {
             ACTIVATE
           </Link>
                 {showActivate && (
-                  <div style={{
-                    position: "fixed",
-                    top: 65,
-                    left: 0,
-                    width: "100vw",
-                    height: "100vh",
-                    background: "rgba(0,0,0,0.18)",
-                    zIndex: 2000,
-                    display: "flex",
-                    alignItems: "flex-start",
-                    justifyContent: "center",
-                    animation: "fadeIn 0.3s"
-                  }}
-                  onClick={() => setShowActivate(false)}
-                  >
-                    <div
-                      style={{
-                        marginTop: 32,
-                        background: "#fff",
-                        borderRadius: 16,
-                        boxShadow: "0 8px 48px 0 rgba(0,0,0,0.18)",
-                        padding: 32,
-                        minWidth: 340,
-                        maxWidth: "90vw",
-                        position: "relative",
-                        animation: "modalIn 0.35s cubic-bezier(.77,0,.18,1)"
-                      }}
-                      onClick={e => e.stopPropagation()}
-                    >
-                      <button
-                        style={{
-                          position: "absolute",
-                          top: 12,
-                          right: 12,
-                          background: "#f5f5f5",
-                          border: "none",
-                          borderRadius: "50%",
-                          width: 32,
-                          height: 32,
-                          fontSize: 20,
-                          color: "#222",
-                          cursor: "pointer",
-                          boxShadow: "0 2px 8px 0 rgba(0,0,0,0.07)"
-                        }}
-                        onClick={() => setShowActivate(false)}
-                        aria-label="Close"
-                      >×</button>
-                      <div style={{ fontFamily: 'Montserrat, Roboto, Arial, sans-serif', fontWeight: 700, fontSize: 22, color: '#1b1b1b', marginBottom: 18, textAlign: 'center', letterSpacing: 0.5 }}>ACTIVATE PROMO CODE</div>
+                  <div className="activate-modal-overlay" onClick={() => setShowActivate(false)}>
+                    <div className="activate-modal" onClick={e => e.stopPropagation()}>
+                      <button className="activate-modal-close" onClick={() => setShowActivate(false)} aria-label="Close">×</button>
+                      <div className="activate-modal-title">ACTIVATE PROMO CODE</div>
                       <form
                         onSubmit={e => {
                           e.preventDefault();
@@ -129,7 +85,7 @@ const Header = () => {
                             setPromoOk(false);
                           }
                         }}
-                        style={{ display: "flex", flexDirection: "column", gap: 16, alignItems: "center" }}
+                        className="activate-modal-form"
                         autoComplete="off"
                       >
                         <input
@@ -137,61 +93,30 @@ const Header = () => {
                           placeholder="Enter promo code"
                           value={promo}
                           onChange={e => { setPromo(e.target.value); setPromoTouched(false); setPromoOk(false); }}
-                          style={{
-                            padding: "12px 18px",
-                            fontSize: 17,
-                            borderRadius: 7,
-                            border: promoTouched && !promoOk ? "1.5px solid #c00" : "1.5px solid #e0e7ef",
-                            outline: "none",
-                            fontFamily: 'Roboto, Arial, sans-serif',
-                            background: "#f7f8fa",
-                            width: 220,
-                            marginBottom: 0
-                          }}
+                          className={
+                            "activate-modal-input" + (promoTouched && !promoOk ? " activate-modal-input-error" : "")
+                          }
                         />
                         <button
                           type="submit"
-                          style={{
-                            padding: "10px 0",
-                            background: promoOk ? "#1b8833" : "#222",
-                            color: "#fff",
-                            border: "none",
-                            borderRadius: 7,
-                            fontFamily: 'Montserrat, Roboto, Arial, sans-serif',
-                            fontWeight: 500,
-                            fontSize: 17,
-                            cursor: "pointer",
-                            width: 140,
-                            letterSpacing: 0.2,
-                            transition: "background 0.18s"
-                          }}
+                          className={promoOk ? "activate-modal-btn activate-modal-btn-success" : "activate-modal-btn"}
                         >
                           {promoOk ? (
-                            <span style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 8 }}>
+                            <span className="activate-modal-btn-content">
                               <svg width="22" height="22" viewBox="0 0 22 22" fill="none" xmlns="http://www.w3.org/2000/svg"><circle cx="11" cy="11" r="11" fill="#1b8833"/><path d="M6.5 11.5L10 15L15.5 8.5" stroke="#fff" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round"/></svg>
                               <span>Activated</span>
                             </span>
                           ) : "Activate"}
                         </button>
                         {promoTouched && !promoOk && (
-                          <div style={{ color: "#c00", fontSize: 15, marginTop: 2 }}>Invalid promo code</div>
+                          <div className="activate-modal-error">Invalid promo code</div>
                         )}
                       </form>
                     </div>
-                    <style>{`
-                      @keyframes fadeIn {
-                        0% { opacity: 0; }
-                        100% { opacity: 1; }
-                      }
-                      @keyframes modalIn {
-                        0% { opacity: 0; transform: scale(0.95); }
-                        100% { opacity: 1; transform: scale(1); }
-                      }
-                    `}</style>
                   </div>
                 )}
           <Link to="/account" className="font-montserrat font-medium text-xs leading-none px-4 tracking-widest text-black/30 hover:text-black focus:text-black active:text-black cursor-pointer transition-colors mr-8 relative after:content-[''] after:absolute after:right-[-16px] after:top-1/2 after:-translate-y-1/2 after:w-px after:h-4 after:bg-gray-300 after:ml-4">ACCOUNT</Link>
-          <button className="ml-4 h-[23px] w-[64px] px-6 bg-black text-white text-xs font-medium uppercase tracking-widest rounded-none">BUY</button>
+          <Link to="/cart" className="ml-4 h-[23px] w-[64px] px-6 flex items-center justify-center bg-black text-white text-xs font-medium uppercase tracking-widest rounded-none hover:bg-[#444] transition-colors">BUY</Link>
         </div>
       </div>
     </header>

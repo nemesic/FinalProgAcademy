@@ -27,18 +27,22 @@ export default function Help() {
     setSent(true);
     setForm({ name: "", email: "", message: "" });
     setError("");
-    // Here you could add API call to actually send the message
   }
 
   return (
     <div className="help-page min-h-screen flex items-center justify-center bg-[#f7f8fa]">
       <div className="help-card animate-help-fade-in">
-        <h1 className="help-title">Contact our team</h1>
+        <div className="help-badge">Support</div>
+        <h1 className="help-title">CONTACT OUR TEAM</h1>
         <div className="help-subtitle">
           We’ll answer your questions and help with any issue.
         </div>
         <div className="help-desc">
           If you have any questions, issues, or suggestions, just fill out the form below and our team will get back to you as soon as possible.
+        </div>
+        <div className="help-info-row">
+          <div className="help-info-chip">Reply within 24 hours</div>
+          <div className="help-info-chip">Human support only</div>
         </div>
         {sent && (
           <div className="help-success">Thank you! Your message has been sent.</div>
@@ -47,6 +51,8 @@ export default function Help() {
           <div className="help-error">{error}</div>
         )}
         <form onSubmit={handleSubmit} className="help-form" autoComplete="off">
+          <label className="help-label">
+            Name
           <input
             type="text"
             name="name"
@@ -55,6 +61,9 @@ export default function Help() {
             onChange={handleChange}
             className="help-input"
           />
+          </label>
+          <label className="help-label">
+            Email
           <input
             type="email"
             name="email"
@@ -63,22 +72,27 @@ export default function Help() {
             onChange={handleChange}
             className="help-input"
           />
+          </label>
+          <label className="help-label">
+            Message
           <textarea
             name="message"
             placeholder="How can we help you?"
             value={form.message}
             onChange={handleChange}
             rows={4}
-            className="help-input"
+            className="help-input help-textarea"
           />
+          </label>
           <button
             type="submit"
             className="help-btn"
           >
-            Send
+            Send Message
           </button>
         </form>
         <div className="help-footer">
+          <span className="help-footer-kicker">Need a faster answer?</span>
           For urgent questions, email us at <a href="mailto:support@prog.academy" className="help-footer-link">support@prog.academy</a>
         </div>
       </div>

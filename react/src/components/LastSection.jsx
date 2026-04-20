@@ -125,7 +125,7 @@ export default function LastSection() {
 
   return (
     <>
-      <div style={{ height: "20px", width: "100%" }} />
+      <div className="section-spacer-sm section-spacer-full" />
       <section id="last-section" className={`last-section${founderVisible ? " animated" : ""}`} ref={founderRef}>
         <div className={`last-section-content${founderVisible ? " animated" : ""}`}>
           <h2 className="last-section-title">Meet our founder.</h2>
@@ -141,15 +141,15 @@ export default function LastSection() {
         </div>
       </section>
 
-      <div style={{ height: "100px", width: "100%" }} />
+      <div className="section-spacer-lg section-spacer-full" />
 
       <section className="reviews-section" ref={reviewsSectionRef}>
-        {apiError && <div style={{ color: 'red', marginBottom: 8 }}>{apiError}</div>}
+        {apiError && <div className="section-error">{apiError}</div>}
         <div className={`reviews-container${reviewFade ? " fade-in" : " fade-out"}`}>
           {pagedReviews.map((item, idx) => (
             <div className="review" key={idx}>
               <p className="review-quote">“{item.quote}”</p>
-              <div style={{ height: "30px", width: "100%" }} />
+              <div className="section-spacer-md section-spacer-full" />
               {item.logo && (
                 <div className="review-logo">
                   <img src={item.logo} alt={item.source} />
@@ -165,17 +165,16 @@ export default function LastSection() {
             key={i}
             className={`review-dot${i === page ? " active" : ""}`}
             onClick={() => handlePageClick(i)}
-            style={{ cursor: "pointer" }} 
           />
         ))}
         {pageCountRaw > 15 && (
-          <span style={{ marginLeft: 8, color: '#888' }}></span>
+          <span className="review-pagination-ellipsis"></span>
         )}
       </div>
       {isModalOpen && (
         <FounderModal onClose={() => setIsModalOpen(false)} />
       )}
-      <div style={{ height: "100px", width: "100%" }} />
+      <div className="section-spacer-lg section-spacer-full" />
     </>
   );
 }

@@ -1,16 +1,93 @@
-# React + Vite
+# FinalProgAcademy
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+Final front-end project for Prog.Academy.
 
-Currently, two official plugins are available:
+This project is a responsive wellness e-commerce website inspired by LYMA. It includes a landing page, product pages, journal, support page, account page, and cart page.
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Oxc](https://oxc.rs)
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/)
+## Language
 
-## React Compiler
+- JavaScript (ES6+)
 
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
+## Stack
 
-## Expanding the ESLint configuration
+- React
+- Vite
+- React Router DOM
+- Tailwind CSS
+- CSS
+- ESLint
+- LocalStorage
+- Fetch API
 
-If you are developing a production application, we recommend using TypeScript with type-aware lint rules enabled. Check out the [TS template](https://github.com/vitejs/vite/tree/main/packages/create-vite/template-react-ts) for information on how to integrate TypeScript and [`typescript-eslint`](https://typescript-eslint.io) in your project.
+## Pages
+
+- Home
+- Supplement
+- Laser
+- Journal
+- About
+- Help & Support
+- Account
+- Cart
+
+## Features
+
+- SPA navigation with React Router
+- Product gallery with thumbnails
+- Add to cart
+- Quantity controls for products
+- Cart with total price calculation
+- Account login and logout
+- Smooth scroll navigation between sections
+- Responsive layout
+- Modal windows and animated transitions
+
+## API
+
+API is used only in:
+
+- Reviews
+- Journal
+
+The Journal page loads posts from an external API, and the Reviews section also works with API data.
+
+## LocalStorage
+
+LocalStorage is used only in:
+
+- Cart
+- Account
+
+Cart data is stored in LocalStorage so products stay saved after reload. Account state is also stored there to keep login status.
+
+## Run
+
+Install dependencies:
+
+```bash
+npm install
+```
+
+Start development server:
+
+```bash
+npm run dev
+```
+
+Build project:
+
+```bash
+npm run build
+```
+
+Preview build:
+
+```bash
+npm run preview
+```
+
+## Notes
+
+- Reviews and Journal are the only parts connected to API.
+- Cart and Account work through LocalStorage.
+- The rest of the project is built with React components and custom styling.

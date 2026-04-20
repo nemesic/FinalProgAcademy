@@ -1,6 +1,8 @@
 import React, { useEffect, useState } from "react";
+import { useNavigate } from "react-router-dom";
 
 export default function FourSection() {
+  const navigate = useNavigate();
   const backgrounds = [
     "/img/background5.jpg",
     "/img/background2.png",
@@ -25,12 +27,15 @@ export default function FourSection() {
       }, 700);
     }, 2500);
     return () => clearTimeout(timeoutRef.current);
-  }, [bgIndex]);
+  }, [bgIndex, backgrounds.length]);
+
+  function handleDiscover(path) {
+    navigate(path);
+  }
 
   return (
     <section
-      className="w-full min-w-[1440px] h-[800px] flex flex-col items-center justify-center bg-cover bg-center relative"
-      style={{}}
+      className="four-section-shell w-full flex flex-col items-center justify-center bg-cover bg-center relative"
     >
       {backgrounds.map((bg, i) => (
         <div
@@ -40,23 +45,23 @@ export default function FourSection() {
             (i === bgIndex && fade ? " show" : "") +
             (i === bgIndex && !fade ? " hide" : "")
           }
-          style={{ backgroundImage: `url('${bg}')`, zIndex: 1 }}
-        />
+        >
+          <img src={bg} alt="" className="hero-bg-media" />
+        </div>
       ))}
       <div className={
         "relative z-10 flex flex-col items-center justify-center h-full hero-fade" +
         (show ? " show" : "")
       }>
         <h1
-          className="text-white font-roboto font-normal text-[57px] leading-none tracking-[0.8px] text-center drop-shadow-lg mb-6 uppercase"
-          style={{ width: '756px', height: '67px', letterSpacing: '0.8px' }}
+          className="four-section-title text-white font-roboto font-normal text-[57px] leading-none tracking-[0.8px] text-center drop-shadow-lg mb-6 uppercase"
         >
           WELLNESS INNOVATION AT ITS SCIENTIFIC BEST.
         </h1>
-        <div style={{ paddingBottom: 30 }} />
-        <div className="flex flex-wrap mt-10 justify-center" style={{ gap: '35px' }}>
-          <button className="hero-btn">SUPPLEMENT</button>
-          <button className="hero-btn">LASER</button>
+        <div className="four-section-spacer" />
+        <div className="four-section-actions flex flex-wrap mt-10 justify-center">
+          <button className="hero-btn" onClick={() => handleDiscover("/supplement")}>SUPPLEMENT</button>
+          <button className="hero-btn" onClick={() => handleDiscover("/laser")}>LASER</button>
         </div>
       </div>
     </section>

@@ -11,6 +11,7 @@ import Journal from "./pages/Journal";
 import About from "./pages/About";
 import Help from "./pages/Help";
 import Account from "./pages/Account";
+import Cart from "./pages/Cart";
 import { BrowserRouter, Routes, Route, useLocation } from "react-router-dom";
 import { useEffect } from "react";
 
@@ -51,6 +52,7 @@ function App() {
         <Route path="/about" element={<About />} />
         <Route path="/help" element={<Help />} />
         <Route path="/account" element={<Account />} />
+        <Route path="/cart" element={<Cart />} />
       </Routes>
     </BrowserRouter>
   );

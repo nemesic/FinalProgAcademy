@@ -21,10 +21,10 @@ export default function AtLymaSection() {
 
   return (
     <>
-      <div style={{ height: 20 }} />
+      <div className="section-spacer-sm" />
       <section
         ref={sectionRef}
-        className="atlyma-section w-full min-w-[1440px] h-[600px] flex flex-col items-center justify-center relative"
+        className="atlyma-section w-full min-w-360 h-150 flex flex-col items-center justify-center relative"
       >
         <div className={"atlyma-content atlyma-fade" + (show ? " show" : "")}>
           <h2 className="atlyma-title">THE QUEST FOR BETTER.</h2>
@@ -34,7 +34,7 @@ export default function AtLymaSection() {
           </p>
         </div>
       </section>
-      <div style={{ height: 20 }} />
+      <div className="section-spacer-sm" />
     </>
   );
 }
