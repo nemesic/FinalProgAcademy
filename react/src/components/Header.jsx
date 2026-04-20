@@ -1,32 +1,37 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useSyncExternalStore } from "react";
 import { Link, useNavigate, useLocation } from "react-router-dom";
 import smoothScrollToSection from "./SmoothScrollToSection";
 import { getCartItemsCount, readCart, subscribeToCartUpdates } from "./cartStorage";
 
+function subscribeToHeaderCart(callback) {
+  const unsubscribe = subscribeToCartUpdates(callback);
+  window.addEventListener("focus", callback);
+
+  return () => {
+    window.removeEventListener("focus", callback);
+    unsubscribe();
+  };
+}
+
 const Header = () => {
+  const navigate = useNavigate();
+  const location = useLocation();
   const [scrolled, setScrolled] = useState(false);
   const [showActivate, setShowActivate] = useState(false);
   const [promo, setPromo] = useState("");
   const [promoOk, setPromoOk] = useState(false);
   const [promoTouched, setPromoTouched] = useState(false);
-  const [cartCount, setCartCount] = useState(() => getCartItemsCount(readCart()));
+  const cartCount = useSyncExternalStore(
+    subscribeToHeaderCart,
+    () => getCartItemsCount(readCart()),
+    () => 0
+  );
 
   useEffect(() => {
     const onScroll = () => setScrolled(window.scrollY > 40);
     window.addEventListener("scroll", onScroll);
     return () => window.removeEventListener("scroll", onScroll);
   }, []);
-
-  useEffect(() => {
-    function syncCartCount() {
-      setCartCount(getCartItemsCount(readCart()));
-    }
-
-    return subscribeToCartUpdates(syncCartCount);
-  }, []);
-
-  const navigate = useNavigate();
-  const location = useLocation();
 
   const handleReviewsClick = (e) => {
     e.preventDefault();

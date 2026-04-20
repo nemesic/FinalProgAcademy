@@ -83,7 +83,7 @@ export default function Account() {
             <h1 className="account-title">SIGN IN TO YOUR ACCOUNT</h1>
             <div className="account-subtitle">Secure your checkout and keep your profile session active.</div>
             {fromCheckout && (
-              <div className="account-note">Sign in to complete your purchase. Your cart will stay saved.</div>
+              <div className="account-note">Sign in to continue to checkout. Your basket is saved and will be restored right after login.</div>
             )}
             <form onSubmit={handleSubmit} className="account-form" autoComplete="off">
               <input

@@ -1,6 +1,13 @@
 import { useEffect, useRef, useState } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
-import { getCartItemsCount, readCart, writeCart } from "../components/cartStorage";
+import {
+  getCartItemsCount,
+  readCart,
+  subscribeToCartUpdates,
+  writeCart,
+} from "../components/cartStorage";
+
+const CHECKOUT_CART_SNAPSHOT_KEY = "checkout_cart_snapshot";
 
 function normalizeCartItem(item) {
   return {
@@ -45,11 +52,38 @@ function formatPrice(value) {
   return Number.isInteger(numericValue) ? String(numericValue) : numericValue.toFixed(2);
 }
 
+function readCheckoutCartSnapshot() {
+  try {
+    return JSON.parse(sessionStorage.getItem(CHECKOUT_CART_SNAPSHOT_KEY) || "[]");
+  } catch {
+    return [];
+  }
+}
+
+function writeCheckoutCartSnapshot(cart) {
+  sessionStorage.setItem(CHECKOUT_CART_SNAPSHOT_KEY, JSON.stringify(cart));
+}
+
+function clearCheckoutCartSnapshot() {
+  sessionStorage.removeItem(CHECKOUT_CART_SNAPSHOT_KEY);
+}
+
+function getInitialCart(shouldRestoreCheckoutCart) {
+  const storedCart = readCart();
+
+  if (storedCart.length || !shouldRestoreCheckoutCart) {
+    return storedCart;
+  }
+
+  const snapshot = readCheckoutCartSnapshot();
+  return snapshot.length ? snapshot : storedCart;
+}
+
 export default function Cart() {
   const navigate = useNavigate();
   const location = useLocation();
   const toastTimeout = useRef(null);
-  const [cart, setCart] = useState(() => readCart());
+  const [cart, setCart] = useState(() => getInitialCart(Boolean(location.state?.afterLoginCheckout)));
   const [toast, setToast] = useState("");
 
   const grouped = groupCart(cart);
@@ -88,8 +122,7 @@ export default function Cart() {
       setCart(readCart());
     }
 
-    window.addEventListener("storage", syncCart);
-    return () => window.removeEventListener("storage", syncCart);
+    return subscribeToCartUpdates(syncCart);
   }, []);
 
   useEffect(() => {
@@ -97,7 +130,9 @@ export default function Cart() {
       return;
     }
 
-    showToast("Login successful. Your cart is saved.");
+    clearCheckoutCartSnapshot();
+
+    showToast("Login successful. Your basket is restored and ready for checkout.");
     navigate("/cart", { replace: true, state: null });
   }, [location.state, navigate]);
 
@@ -133,13 +168,14 @@ export default function Cart() {
   }
 
   function clearCart() {
+    clearCheckoutCartSnapshot();
     setCart([]);
-    showToast("Cart cleared");
+    showToast("Basket cleared.");
   }
 
   function removeFromCart(signature) {
     updateGroupedItem(signature, () => null);
-    showToast("Item removed");
+    showToast("Item removed from basket.");
   }
 
   function changeQuantity(signature, delta) {
@@ -155,7 +191,8 @@ export default function Cart() {
     }
 
     if (localStorage.getItem("account_logged_in") !== "true") {
-      showToast("Sign in to continue");
+      writeCheckoutCartSnapshot(cart);
+      showToast("Sign in to continue. Your basket will be saved.");
       navigate("/account", {
         state: {
           fromCheckout: true,
@@ -165,8 +202,9 @@ export default function Cart() {
       return;
     }
 
+    clearCheckoutCartSnapshot();
     setCart([]);
-    showToast("Order placed");
+    showToast("Order placed successfully.");
   }
 
   return (
