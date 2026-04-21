@@ -55,7 +55,7 @@ export default function LastSection() {
         };
         if (isMounted) setAllReviews(prev => [...prev, newReview]);
       } catch {
-        if (isMounted) setApiError("Не вдалося отримати фейковий відгук з API");
+        if (isMounted) setApiError("Failed to get fake feedback from API");
       }
     };
     fetchFakeReview();
@@ -84,7 +84,7 @@ export default function LastSection() {
         setPageRaw(pendingPage);
         setReviewFade(true);
         setPendingPage(null);
-      }, 200); // длительность fade-out
+      }, 200);
       return () => clearTimeout(timer);
     }
   }, [reviewFade, pendingPage]);

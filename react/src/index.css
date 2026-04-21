@@ -1426,7 +1426,6 @@ textarea {
   right: 0;
 }
 
-/* Центрирование внутреннего flex-контейнера для Laser/Supplement */
 .laser-page > div,
 .supplement-page > div {
   box-sizing: border-box;

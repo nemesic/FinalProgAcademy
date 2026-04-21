@@ -4,7 +4,7 @@ export default function Journal() {
   const [posts, setPosts] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
-  const [modal, setModal] = useState(null); // {title, body, img}
+  const [modal, setModal] = useState(null);
 
   useEffect(() => {
     const seed = Math.random().toString(36).slice(2);
@@ -22,7 +22,7 @@ export default function Journal() {
         );
         setError(null);
       })
-      .catch(() => setError("Не вдалося завантажити статті"))
+      .catch(() => setError("Failed to load articles"))
       .finally(() => setLoading(false));
   }, []);
 
@@ -57,7 +57,7 @@ export default function Journal() {
                 );
                 setError(null);
               })
-              .catch(() => setError("Не вдалося завантажити статті"))
+              .catch(() => setError("Failed to load articles"))
               .finally(() => setLoading(false));
           }}
           disabled={loading}
@@ -108,7 +108,7 @@ export default function Journal() {
             <button
               className="journal-modal-close"
               onClick={() => setModal(null)}
-              aria-label="Закрити"
+              aria-label="Close"
             >
               ×
             </button>

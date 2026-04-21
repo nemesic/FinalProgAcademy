@@ -74,7 +74,7 @@ const HeroSection = () => {
         </h1>
         <p
           className={
-            `hero-description-shell text-white font-montserrat font-normal text-[18px] leading-[30px] tracking-[0.44px] text-center drop-shadow pb-[50px] hero-fade` +
+            `hero-description-shell text-white font-montserrat font-normal text-[18px] leading-7.5 tracking-[0.44px] text-center drop-shadow pb-12.5 hero-fade` +
             (show ? " show" : "")
           }
         >
