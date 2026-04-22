@@ -63,10 +63,10 @@ const HeroSection = () => {
         </div>
       ))}
       <div className="hero-overlay-layer" />
-      <div className="relative z-10 flex flex-col items-center justify-center h-full">
+      <div className="hero-content-shell relative z-10 flex flex-col items-center justify-center h-full">
         <h1
           className={
-            `hero-title-shell text-white font-roboto font-normal text-[57px] leading-none tracking-[0.8px] text-center drop-shadow-lg mb-6 hero-fade` +
+            `hero-title-shell hero-fade` +
             (show ? " show" : "")
           }
         >
@@ -74,7 +74,7 @@ const HeroSection = () => {
         </h1>
         <p
           className={
-            `hero-description-shell text-white font-montserrat font-normal text-[18px] leading-7.5 tracking-[0.44px] text-center drop-shadow pb-12.5 hero-fade` +
+            `hero-description-shell hero-fade` +
             (show ? " show" : "")
           }
         >

@@ -1,6 +1,34 @@
 import React, { useState, useRef, useEffect } from "react";
 import { reviews as initialReviews } from "./reviewsData";
 
+const MAX_REVIEW_PAGES = 15;
+const REVIEW_LOGOS = [
+  "/img/forbes.png",
+  "/img/telegraph.png",
+  "/img/financial.png",
+  "/img/vogue.png",
+  "/img/dailymail.png"
+];
+
+const REVIEW_SOURCES = [
+  "Forbes",
+  "The Daily Telegraph",
+  "Financial Times",
+  "Vogue",
+  "Daily Mail"
+];
+
+function shuffleItems(items) {
+  const shuffled = [...items];
+
+  for (let index = shuffled.length - 1; index > 0; index -= 1) {
+    const randomIndex = Math.floor(Math.random() * (index + 1));
+    [shuffled[index], shuffled[randomIndex]] = [shuffled[randomIndex], shuffled[index]];
+  }
+
+  return shuffled;
+}
+
 export default function LastSection() {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [allReviews, setAllReviews] = useState(initialReviews);
@@ -12,55 +40,53 @@ export default function LastSection() {
   const [REVIEWS_PER_PAGE, setREVIEWS_PER_PAGE] = useState(getReviewsPerPage());
   const [page, setPageRaw] = useState(0);
   const pageCountRaw = Math.ceil(allReviews.length / REVIEWS_PER_PAGE);
-  const pageCount = Math.min(pageCountRaw, 15);
+  const pageCount = Math.min(pageCountRaw, MAX_REVIEW_PAGES);
+  const targetReviewsCount = REVIEWS_PER_PAGE * MAX_REVIEW_PAGES;
   const pagedReviews = allReviews.slice(page * REVIEWS_PER_PAGE, (page + 1) * REVIEWS_PER_PAGE);
   const [reviewFade, setReviewFade] = useState(true);
   const [pendingPage, setPendingPage] = useState(null);
 
-  const logos = [
-    "/img/forbes.png",
-    "/img/telegraph.png",
-    "/img/financial.png",
-    "/img/vogue.png",
-    "/img/dailymail.png"
-  ];
-  const sources = [
-    "Forbes",
-    "The Daily Telegraph",
-    "Financial Times",
-    "Vogue",
-    "Daily Mail"
-  ];
-
   const [apiError, setApiError] = useState(null);
 
   const reviewsSectionRef = useRef(null);
+  const isFetchingApiReviews = useRef(false);
   const [reviewsVisible, setReviewsVisible] = useState(false);
 
   useEffect(() => {
-    if (!reviewsVisible) return;
+    if (!reviewsVisible || allReviews.length >= targetReviewsCount || isFetchingApiReviews.current) return;
+
+    isFetchingApiReviews.current = true;
     let isMounted = true;
-    const fetchFakeReview = async () => {
+
+    const fetchFakeReviews = async () => {
       setApiError(null);
       try {
-        const postId = Math.floor(Math.random() * 100) + 1;
-        const res = await fetch(`https://jsonplaceholder.typicode.com/posts/${postId}`);
+        const missingReviews = targetReviewsCount - allReviews.length;
+        const res = await fetch("https://jsonplaceholder.typicode.com/posts");
         if (!res.ok) throw new Error("API error");
         const data = await res.json();
-        const idx = Math.floor(Math.random() * logos.length);
-        const newReview = {
-          quote: data.title,
-          logo: logos[idx],
-          source: sources[idx],
-        };
-        if (isMounted) setAllReviews(prev => [...prev, newReview]);
+        const randomPosts = shuffleItems(data).slice(0, missingReviews);
+        const newReviews = randomPosts.map((item, idx) => ({
+          quote: item.title,
+          logo: REVIEW_LOGOS[idx % REVIEW_LOGOS.length],
+          source: REVIEW_SOURCES[idx % REVIEW_SOURCES.length],
+        }));
+
+        if (isMounted) {
+          setAllReviews(prev => [...prev, ...newReviews]);
+        }
       } catch {
+        isFetchingApiReviews.current = false;
         if (isMounted) setApiError("Failed to get fake feedback from API");
+        return;
       }
+
+      isFetchingApiReviews.current = false;
     };
-    fetchFakeReview();
+
+    fetchFakeReviews();
     return () => { isMounted = false; };
-  }, [logos, sources, reviewsVisible]);
+  }, [REVIEWS_PER_PAGE, allReviews.length, reviewsVisible, targetReviewsCount]);
 
   useEffect(() => {
     const section = reviewsSectionRef.current;

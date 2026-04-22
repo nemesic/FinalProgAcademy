@@ -49,13 +49,12 @@ export default function FourSection() {
           <img src={bg} alt="" className="hero-bg-media" />
         </div>
       ))}
+      <div className="hero-overlay-layer" />
       <div className={
-        "relative z-10 flex flex-col items-center justify-center h-full hero-fade" +
+        "four-section-content relative z-10 flex flex-col items-center justify-center h-full hero-fade" +
         (show ? " show" : "")
       }>
-        <h1
-          className="four-section-title text-white font-roboto font-normal text-[57px] leading-none tracking-[0.8px] text-center drop-shadow-lg mb-6 uppercase"
-        >
+        <h1 className="four-section-title">
           WELLNESS INNOVATION AT ITS SCIENTIFIC BEST.
         </h1>
         <div className="four-section-spacer" />
